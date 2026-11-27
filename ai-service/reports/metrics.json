@@ -1,0 +1,154 @@
+{
+  "dataset": {
+    "path": "data\\synthetic_inventory_risk.csv",
+    "rows": 4000,
+    "class_counts": {
+      "LOW": 1581,
+      "MEDIUM": 1219,
+      "HIGH": 1200
+    },
+    "rule_agreement": 0.93275
+  },
+  "split": {
+    "test_size": 0.2,
+    "random_state": 42
+  },
+  "models": {
+    "Decision Tree": {
+      "accuracy": 0.905,
+      "f1_macro": 0.9053445114152101,
+      "f1_weighted": 0.9064123358425813,
+      "confusion_matrix": [
+        [
+          285,
+          31,
+          0
+        ],
+        [
+          19,
+          220,
+          5
+        ],
+        [
+          0,
+          21,
+          219
+        ]
+      ],
+      "classification_report": {
+        "LOW": {
+          "precision": 0.9375,
+          "recall": 0.9018987341772152,
+          "f1-score": 0.9193548387096774,
+          "support": 316.0
+        },
+        "MEDIUM": {
+          "precision": 0.8088235294117647,
+          "recall": 0.9016393442622951,
+          "f1-score": 0.8527131782945736,
+          "support": 244.0
+        },
+        "HIGH": {
+          "precision": 0.9776785714285714,
+          "recall": 0.9125,
+          "f1-score": 0.9439655172413793,
+          "support": 240.0
+        },
+        "accuracy": 0.905,
+        "macro avg": {
+          "precision": 0.908000700280112,
+          "recall": 0.9053460261465034,
+          "f1-score": 0.9053445114152101,
+          "support": 800.0
+        },
+        "weighted avg": {
+          "precision": 0.9103072478991596,
+          "recall": 0.905,
+          "f1-score": 0.9064123358425813,
+          "support": 800.0
+        }
+      }
+    },
+    "Random Forest": {
+      "accuracy": 0.91375,
+      "f1_macro": 0.914056978416555,
+      "f1_weighted": 0.915436606661856,
+      "confusion_matrix": [
+        [
+          283,
+          33,
+          0
+        ],
+        [
+          9,
+          230,
+          5
+        ],
+        [
+          0,
+          22,
+          218
+        ]
+      ],
+      "classification_report": {
+        "LOW": {
+          "precision": 0.9691780821917808,
+          "recall": 0.8955696202531646,
+          "f1-score": 0.930921052631579,
+          "support": 316.0
+        },
+        "MEDIUM": {
+          "precision": 0.8070175438596491,
+          "recall": 0.9426229508196722,
+          "f1-score": 0.8695652173913043,
+          "support": 244.0
+        },
+        "HIGH": {
+          "precision": 0.9775784753363229,
+          "recall": 0.9083333333333333,
+          "f1-score": 0.9416846652267818,
+          "support": 240.0
+        },
+        "accuracy": 0.91375,
+        "macro avg": {
+          "precision": 0.9179247004625842,
+          "recall": 0.9155086348020567,
+          "f1-score": 0.914056978416555,
+          "support": 800.0
+        },
+        "weighted avg": {
+          "precision": 0.9222392359438433,
+          "recall": 0.91375,
+          "f1-score": 0.915436606661856,
+          "support": 800.0
+        }
+      }
+    }
+  },
+  "chosen_model": {
+    "name": "Random Forest",
+    "accuracy": 0.91375,
+    "f1_macro": 0.914056978416555,
+    "selection_rule": "highest test F1 macro, then highest accuracy",
+    "model_feature_order": [
+      "currentStock",
+      "averageMonthlySales",
+      "recentSales",
+      "daysUntilExpiry",
+      "salesRate",
+      "expectedConsumption",
+      "stockToExpectedRatio",
+      "remainingMonths"
+    ]
+  },
+  "feature_importance": {
+    "currentStock": 0.12416420734353964,
+    "averageMonthlySales": 0.011040146323932878,
+    "recentSales": 0.012235154432386939,
+    "daysUntilExpiry": 0.030367772942614946,
+    "salesRate": 0.02020495374808985,
+    "expectedConsumption": 0.0634993594004008,
+    "stockToExpectedRatio": 0.7082821418617621,
+    "remainingMonths": 0.030206263947272737
+  }
+}

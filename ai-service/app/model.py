@@ -2,7 +2,10 @@ from __future__ import annotations
 
 import os
 from pathlib import Path
+from numbers import Real
 from typing import Any
+
+from app.features import model_features
 
 RISK_LABELS = ("LOW", "MEDIUM", "HIGH")
 DEFAULT_MODEL_PATH = Path(__file__).resolve().parents[1] / "models" / "risk_model.pkl"
@@ -33,7 +36,7 @@ def normalise_prediction(value: Any) -> str | None:
         label = value.strip().upper()
         if label in RISK_LABELS:
             return label
-    if isinstance(value, (int, float)) and not isinstance(value, bool):
+    if isinstance(value, Real) and not isinstance(value, bool):
         index = int(value)
         if 0 <= index < len(RISK_LABELS):
             return RISK_LABELS[index]
@@ -79,7 +82,9 @@ class RiskPredictor:
         if self.model is None:
             return fallback, True
 
-        features = [[current_stock, average_monthly_sales, recent_sales, days_until_expiry]]
+        features = model_features(
+            [[current_stock, average_monthly_sales, recent_sales, days_until_expiry]]
+        )
         try:
             raw_prediction = self.model.predict(features)
             label = normalise_prediction(raw_prediction[0])

@@ -1,10 +1,12 @@
 import unittest
 from unittest.mock import patch
 
+import numpy as np
 from fastapi.testclient import TestClient
 
+from app.features import model_features
 from app.main import app, predictor
-from app.model import rule_risk
+from app.model import normalise_prediction, rule_risk
 
 
 class RuleRiskTests(unittest.TestCase):
@@ -19,6 +21,23 @@ class RuleRiskTests(unittest.TestCase):
 
     def test_zero_days_with_stock_is_high_risk(self) -> None:
         self.assertEqual(rule_risk(1, 0, 0, 0), "HIGH")
+
+
+class PredictionTests(unittest.TestCase):
+    def test_numeric_model_outputs_map_to_risk_labels(self) -> None:
+        self.assertEqual(normalise_prediction(0), "LOW")
+        self.assertEqual(normalise_prediction(np.int64(1)), "MEDIUM")
+        self.assertEqual(normalise_prediction(np.int64(2)), "HIGH")
+        self.assertIsNone(normalise_prediction(3))
+
+
+class FeatureTests(unittest.TestCase):
+    def test_model_features_appends_derived_demand_values(self) -> None:
+        features = model_features([[120, 20, 18, 60]])
+
+        self.assertEqual(features.shape, (1, 8))
+        self.assertAlmostEqual(float(features[0][4]), 19.4)
+        self.assertAlmostEqual(float(features[0][5]), 38.8)
 
 
 class ApiTests(unittest.TestCase):

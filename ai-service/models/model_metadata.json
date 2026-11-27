@@ -1,0 +1,32 @@
+{
+  "model_type": "Random Forest",
+  "raw_feature_order": [
+    "currentStock",
+    "averageMonthlySales",
+    "recentSales",
+    "daysUntilExpiry"
+  ],
+  "model_feature_order": [
+    "currentStock",
+    "averageMonthlySales",
+    "recentSales",
+    "daysUntilExpiry",
+    "salesRate",
+    "expectedConsumption",
+    "stockToExpectedRatio",
+    "remainingMonths"
+  ],
+  "label_map": {
+    "LOW": 0,
+    "MEDIUM": 1,
+    "HIGH": 2
+  },
+  "reverse_label_map": {
+    "0": "LOW",
+    "1": "MEDIUM",
+    "2": "HIGH"
+  },
+  "random_state": 42,
+  "accuracy": 0.91375,
+  "f1_macro": 0.914056978416555
+}
