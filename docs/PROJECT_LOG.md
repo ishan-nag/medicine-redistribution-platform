@@ -12,6 +12,16 @@ Ask the mentor whether the plan can end in Dec or Jan. If the project is done be
 
 ## Progress Log (Point 7) - newest first
 
+### 2026-11-27 - dataset, model training, and model-backed API
+- Done: reviewed and committed the 4000-row synthetic dataset; fixed the generator to use a script-relative output path and aligned `DATASET_NOTES.md` with the real parameters (Poisson λ=6, σ=0.3/0.7, 35%/30% flips). Regeneration produced an identical SHA256 hash.
+- Done: added `app/features.py`; the service now derives `salesRate`, `expectedConsumption`, `stockToExpectedRatio`, and `remainingMonths` before model inference. Fixed NumPy numeric label normalisation so `np.int64` predictions are not mistaken for fallback cases.
+- Done: added `train_model.py` with a stratified 80/20 split, seed 42, and Decision Tree vs Random Forest comparison. Decision Tree: accuracy 0.9050, F1 macro 0.9053. Random Forest: accuracy 0.9137, F1 macro 0.9141. Random Forest chosen.
+- Done: generated `models/risk_model.pkl`, `models/model_metadata.json`, and reports (`model_comparison.md`, `metrics.json`, `confusion_matrix.png`, `feature_importance.png`). Added `.gitignore` exception so the model is deployable.
+- Verified: 10/10 unit tests passed; live curl returned `{"status":"ok","model_loaded":true}` and `{"risk":"HIGH","fallback_used":false}`.
+- Decisions: select by F1 macro then accuracy; use derived demand features; keep the model in the repo; store report artifacts under `ai-service/reports/`; keep the stack free/local.
+- Blockers: none for the ML core. Spring Boot integration testing is pending until the backend endpoint call is ready.
+- Next: integrate with Spring Boot, run deployment smoke test, prepare viva explanation from the comparison report and charts.
+
 ### 2026-11-27 - fallback-first FastAPI service
 - Done: added `ai-service/app/main.py`, `app/model.py`, `app/schemas.py`, requirements files, `Procfile`, storage folders, and `tests/test_service.py`.
 - Done: `/predict` accepts the backend camelCase JSON, accepts snake-case as a fallback, validates non-negative numbers, and returns `risk` plus `fallback_used`. `/health` reports `model_loaded`.

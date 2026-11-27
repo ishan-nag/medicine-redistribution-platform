@@ -33,15 +33,15 @@ Response:
 ```json
 {
   "risk": "HIGH",
-  "fallback_used": true
+  "fallback_used": false
 }
 ```
 
-`risk` is one of `LOW`, `MEDIUM`, `HIGH`. `fallback_used` is `false` when the trained model made the prediction and `true` when the rule-based fallback was used. Until the trained model exists, `/predict` always returns `fallback_used: true`. If the backend only needs `risk`, the extra field can be ignored safely.
+`risk` is one of `LOW`, `MEDIUM`, `HIGH`. `fallback_used` is `false` when the trained model made the prediction and `true` when the rule-based fallback was used. If the backend only needs `risk`, the extra field can be ignored safely.
 
 GET /health
 ```json
-{"status": "ok", "model_loaded": false}
+{"status": "ok", "model_loaded": true}
 ```
 
 ## Labelling rule
@@ -58,22 +58,35 @@ Labels:
 - `MEDIUM` if `expectedConsumption < currentStock <= 2 * expectedConsumption`
 - `LOW` if `currentStock <= expectedConsumption`
 
-The same rule is implemented as the fallback in `app/model.py`. The synthetic dataset will be generated from this rule later; add modest, realistic noise so the model cannot simply memorise a perfect formula. The exact noise level is still to be decided.
+The same rule is implemented as the fallback in `app/model.py`. The synthetic dataset was generated from this rule with bounded boundary noise: 269/4000 rows (6.7%) were flipped, giving 93.27% rule agreement so the model cannot simply memorise a perfect formula.
 
 ## Model
-No model file yet. The service tries to load `ai-service/models/risk_model.pkl` at startup; if it is missing or broken, `/predict` keeps working through the rule fallback.
+Chosen: **Random Forest**, saved at `ai-service/models/risk_model.pkl`. Metadata is at `ai-service/models/model_metadata.json`.
 
-When training later, use this feature order:
+Training script: `ai-service/train_model.py` uses an 80/20 stratified split with seed 42.
+
+| Model | Accuracy | F1 macro | F1 weighted |
+|---|---:|---:|---:|
+| Decision Tree | 0.9050 | 0.9053 | 0.9064 |
+| Random Forest | 0.9137 | 0.9141 | 0.9154 |
+
+Reason: Random Forest had the higher held-out F1 macro and accuracy. Accuracy is below the 93.27% rule agreement because the labels contain boundary noise; this is expected and avoids a suspicious 99% result.
+
+Raw API feature order:
 
 ```text
 [currentStock, averageMonthlySales, recentSales, daysUntilExpiry]
 ```
 
-Numeric predictions must be encoded as `0=LOW`, `1=MEDIUM`, `2=HIGH`; string labels are also accepted by the loader.
+Model feature order, built by `app/features.py`:
 
-Plan: train and compare a Decision Tree and a Random Forest on the same train/test split. Choose the better model by held-out accuracy and F1, then save it at `ai-service/models/risk_model.pkl`.
+```text
+[currentStock, averageMonthlySales, recentSales, daysUntilExpiry, salesRate, expectedConsumption, stockToExpectedRatio, remainingMonths]
+```
 
-Note: `.gitignore` currently ignores `*.pkl`. Add an exception for `ai-service/models/*.pkl` before committing the trained model, or deployment will not include it.
+Numeric labels are encoded as `0=LOW`, `1=MEDIUM`, `2=HIGH`; the loader accepts Python and NumPy numerics plus string labels.
+
+Report artifacts: `ai-service/reports/model_comparison.md`, `metrics.json`, `confusion_matrix.png`, `feature_importance.png`. `.gitignore` now permits `ai-service/models/*.pkl` so deployment includes the model.
 
 ## Folder structure
 Implemented under `ai-service/`:
@@ -82,11 +95,20 @@ Implemented under `ai-service/`:
 ai-service/
   app/main.py
   app/model.py
+  app/features.py
   app/schemas.py
-  data/
-  models/
+  data/generate_dataset.py
+  data/DATASET_NOTES.md
+  data/synthetic_inventory_risk.csv
+  models/risk_model.pkl
+  models/model_metadata.json
   notebooks/
+  reports/model_comparison.md
+  reports/metrics.json
+  reports/confusion_matrix.png
+  reports/feature_importance.png
   tests/test_service.py
+  train_model.py
   requirements.txt
   requirements-dev.txt
   Procfile
@@ -97,6 +119,8 @@ From `ai-service/`:
 
 ```bash
 python -m pip install -r requirements-dev.txt
+python data/generate_dataset.py
+python train_model.py
 python -m uvicorn app.main:app --host 0.0.0.0 --port 8001
 python -m unittest discover -s tests -v
 ```
@@ -110,19 +134,20 @@ Done:
 - API contract implemented with camelCase and snake-case input support
 - Labelling and fallback rule implemented
 - `/health` and `/predict` endpoints implemented
-- 8 unit tests passing
-- Live curl smoke test passed with fallback response
+- Synthetic 4000-row dataset generated, documented, and verified reproducible
+- Decision Tree vs Random Forest comparison completed
+- Random Forest saved at `models/risk_model.pkl` with metadata
+- Metrics, confusion matrix, feature importance chart, and comparison report generated
+- 10 unit tests passing
+- Live curl smoke test passed with `model_loaded: true` and `fallback_used: false`
 - Context and progress log created under `docs/`
 - GitHub remote verified
 
 In progress:
 
-- Waiting for the synthetic dataset before dataset generation and training
+- Spring Boot integration testing with Abhinandan
 
 Pending:
 
-- Synthetic dataset arrival/review
-- Dataset generator
-- Decision Tree vs Random Forest training, comparison, and saved model
-- Spring Boot integration testing
-- Metrics, confusion matrix, feature importance chart, and model comparison report
+- Final deployment smoke test after backend integration
+- Viva explanation using `ai-service/reports/` artifacts
