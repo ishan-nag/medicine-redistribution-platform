@@ -11,23 +11,34 @@
   },
   "split": {
     "test_size": 0.2,
-    "random_state": 42
+    "random_state": 42,
+    "cv_folds": 3,
+    "cv_scoring": "f1_macro"
   },
   "models": {
     "Decision Tree": {
-      "accuracy": 0.905,
-      "f1_macro": 0.9053445114152101,
-      "f1_weighted": 0.9064123358425813,
+      "parameter_grid": {
+        "max_depth": "[8, 12, None]",
+        "min_samples_leaf": "[2, 5, 10]"
+      },
+      "best_params": {
+        "max_depth": "8",
+        "min_samples_leaf": "2"
+      },
+      "cv_f1_macro": 0.9198526599884809,
+      "accuracy": 0.9125,
+      "f1_macro": 0.9127493608653494,
+      "f1_weighted": 0.9141013079694844,
       "confusion_matrix": [
         [
-          285,
-          31,
+          283,
+          33,
           0
         ],
         [
-          19,
-          220,
-          5
+          10,
+          228,
+          6
         ],
         [
           0,
@@ -37,52 +48,72 @@
       ],
       "classification_report": {
         "LOW": {
-          "precision": 0.9375,
-          "recall": 0.9018987341772152,
-          "f1-score": 0.9193548387096774,
+          "precision": 0.9658703071672355,
+          "recall": 0.8955696202531646,
+          "f1-score": 0.9293924466338259,
           "support": 316.0
         },
         "MEDIUM": {
-          "precision": 0.8088235294117647,
-          "recall": 0.9016393442622951,
-          "f1-score": 0.8527131782945736,
+          "precision": 0.8085106382978723,
+          "recall": 0.9344262295081968,
+          "f1-score": 0.8669201520912547,
           "support": 244.0
         },
         "HIGH": {
-          "precision": 0.9776785714285714,
+          "precision": 0.9733333333333334,
           "recall": 0.9125,
-          "f1-score": 0.9439655172413793,
+          "f1-score": 0.9419354838709677,
           "support": 240.0
         },
-        "accuracy": 0.905,
+        "accuracy": 0.9125,
         "macro avg": {
-          "precision": 0.908000700280112,
-          "recall": 0.9053460261465034,
-          "f1-score": 0.9053445114152101,
+          "precision": 0.9159047595994805,
+          "recall": 0.9141652832537871,
+          "f1-score": 0.9127493608653494,
           "support": 800.0
         },
         "weighted avg": {
-          "precision": 0.9103072478991596,
-          "recall": 0.905,
-          "f1-score": 0.9064123358425813,
+          "precision": 0.9201145160119091,
+          "recall": 0.9125,
+          "f1-score": 0.9141013079694844,
           "support": 800.0
         }
+      },
+      "importance_source": "native",
+      "feature_importance": {
+        "currentStock": 0.0027036282407662546,
+        "averageMonthlySales": 0.0,
+        "recentSales": 0.003682791408648434,
+        "daysUntilExpiry": 0.001276520274774813,
+        "salesRate": 0.0035705140247300734,
+        "expectedConsumption": 0.004740663443517006,
+        "stockToExpectedRatio": 0.9829879859050241,
+        "remainingMonths": 0.0010378967025392307
       }
     },
     "Random Forest": {
-      "accuracy": 0.91375,
-      "f1_macro": 0.914056978416555,
-      "f1_weighted": 0.915436606661856,
+      "parameter_grid": {
+        "max_depth": "[None, 12]",
+        "min_samples_leaf": "[1, 2, 3]"
+      },
+      "best_params": {
+        "max_depth": "12",
+        "min_samples_leaf": "3"
+      },
+      "cv_f1_macro": 0.9269801835521078,
+      "accuracy": 0.92125,
+      "f1_macro": 0.9217922669328239,
+      "f1_weighted": 0.922918256741206,
       "confusion_matrix": [
         [
-          283,
-          33,
+          284,
+          32,
           0
         ],
         [
-          9,
-          230,
-          5
+          7,
+          235,
+          2
         ],
         [
           0,
@@ -92,63 +123,358 @@
       ],
       "classification_report": {
         "LOW": {
-          "precision": 0.9691780821917808,
-          "recall": 0.8955696202531646,
-          "f1-score": 0.930921052631579,
+          "precision": 0.9759450171821306,
+          "recall": 0.8987341772151899,
+          "f1-score": 0.9357495881383855,
           "support": 316.0
         },
         "MEDIUM": {
-          "precision": 0.8070175438596491,
-          "recall": 0.9426229508196722,
-          "f1-score": 0.8695652173913043,
+          "precision": 0.8131487889273357,
+          "recall": 0.9631147540983607,
+          "f1-score": 0.8818011257035647,
           "support": 244.0
         },
         "HIGH": {
-          "precision": 0.9775784753363229,
+          "precision": 0.990909090909091,
           "recall": 0.9083333333333333,
-          "f1-score": 0.9416846652267818,
+          "f1-score": 0.9478260869565217,
           "support": 240.0
         },
-        "accuracy": 0.91375,
+        "accuracy": 0.92125,
         "macro avg": {
-          "precision": 0.9179247004625842,
-          "recall": 0.9155086348020567,
-          "f1-score": 0.914056978416555,
+          "precision": 0.926667632339519,
+          "recall": 0.9233940882156279,
+          "f1-score": 0.9217922669328239,
           "support": 800.0
         },
         "weighted avg": {
-          "precision": 0.9222392359438433,
-          "recall": 0.91375,
-          "f1-score": 0.915436606661856,
+          "precision": 0.9307813896825062,
+          "recall": 0.92125,
+          "f1-score": 0.922918256741206,
           "support": 800.0
         }
+      },
+      "importance_source": "native",
+      "feature_importance": {
+        "currentStock": 0.12747475149943482,
+        "averageMonthlySales": 0.00891952900050104,
+        "recentSales": 0.009382583800028457,
+        "daysUntilExpiry": 0.02757719463251749,
+        "salesRate": 0.01687697215634644,
+        "expectedConsumption": 0.058381976683335356,
+        "stockToExpectedRatio": 0.7248436021667692,
+        "remainingMonths": 0.02654339006106734
+      }
+    },
+    "Extra Trees": {
+      "parameter_grid": {
+        "max_depth": "[None, 12]",
+        "min_samples_leaf": "[1, 2, 3]"
+      },
+      "best_params": {
+        "max_depth": "12",
+        "min_samples_leaf": "1"
+      },
+      "cv_f1_macro": 0.9014253568088173,
+      "accuracy": 0.90375,
+      "f1_macro": 0.9025331141635382,
+      "f1_weighted": 0.9037006302005366,
+      "confusion_matrix": [
+        [
+          297,
+          19,
+          0
+        ],
+        [
+          34,
+          203,
+          7
+        ],
+        [
+          0,
+          17,
+          223
+        ]
+      ],
+      "classification_report": {
+        "LOW": {
+          "precision": 0.8972809667673716,
+          "recall": 0.939873417721519,
+          "f1-score": 0.9180834621329211,
+          "support": 316.0
+        },
+        "MEDIUM": {
+          "precision": 0.8493723849372385,
+          "recall": 0.8319672131147541,
+          "f1-score": 0.8405797101449275,
+          "support": 244.0
+        },
+        "HIGH": {
+          "precision": 0.9695652173913043,
+          "recall": 0.9291666666666667,
+          "f1-score": 0.948936170212766,
+          "support": 240.0
+        },
+        "accuracy": 0.90375,
+        "macro avg": {
+          "precision": 0.9054061896986382,
+          "recall": 0.9003357658343133,
+          "f1-score": 0.9025331141635382,
+          "support": 800.0
+        },
+        "weighted avg": {
+          "precision": 0.9043541244963608,
+          "recall": 0.90375,
+          "f1-score": 0.9037006302005366,
+          "support": 800.0
+        }
+      },
+      "importance_source": "native",
+      "feature_importance": {
+        "currentStock": 0.2572866822651985,
+        "averageMonthlySales": 0.018145629438531062,
+        "recentSales": 0.01651629798686997,
+        "daysUntilExpiry": 0.030526091325028547,
+        "salesRate": 0.021948482012550417,
+        "expectedConsumption": 0.055313014483046166,
+        "stockToExpectedRatio": 0.5629338306387995,
+        "remainingMonths": 0.03732997184997564
+      }
+    },
+    "Gradient Boosting": {
+      "parameter_grid": {
+        "n_estimators": "[100, 200]",
+        "learning_rate": "[0.1]",
+        "max_depth": "[2, 3]"
+      },
+      "best_params": {
+        "learning_rate": "0.1",
+        "max_depth": "3",
+        "n_estimators": "100"
+      },
+      "cv_f1_macro": 0.9231770935199899,
+      "accuracy": 0.9075,
+      "f1_macro": 0.9079074735035088,
+      "f1_weighted": 0.9089784775938995,
+      "confusion_matrix": [
+        [
+          283,
+          33,
+          0
+        ],
+        [
+          15,
+          223,
+          6
+        ],
+        [
+          0,
+          20,
+          220
+        ]
+      ],
+      "classification_report": {
+        "LOW": {
+          "precision": 0.9496644295302014,
+          "recall": 0.8955696202531646,
+          "f1-score": 0.9218241042345277,
+          "support": 316.0
+        },
+        "MEDIUM": {
+          "precision": 0.8079710144927537,
+          "recall": 0.9139344262295082,
+          "f1-score": 0.8576923076923076,
+          "support": 244.0
+        },
+        "HIGH": {
+          "precision": 0.9734513274336283,
+          "recall": 0.9166666666666666,
+          "f1-score": 0.944206008583691,
+          "support": 240.0
+        },
+        "accuracy": 0.9075,
+        "macro avg": {
+          "precision": 0.9103622571521944,
+          "recall": 0.9087235710497797,
+          "f1-score": 0.9079074735035088,
+          "support": 800.0
+        },
+        "weighted avg": {
+          "precision": 0.913584007314808,
+          "recall": 0.9075,
+          "f1-score": 0.9089784775938995,
+          "support": 800.0
+        }
+      },
+      "importance_source": "native",
+      "feature_importance": {
+        "currentStock": 0.0014523322202354826,
+        "averageMonthlySales": 0.0012998834739678415,
+        "recentSales": 0.0019281097684377415,
+        "daysUntilExpiry": 0.001864410474528894,
+        "salesRate": 0.0023344505529488187,
+        "expectedConsumption": 0.003108677713441952,
+        "stockToExpectedRatio": 0.9861780864936359,
+        "remainingMonths": 0.0018340493028032368
+      }
+    },
+    "Hist Gradient Boosting": {
+      "parameter_grid": {
+        "max_iter": "[100, 200]",
+        "max_leaf_nodes": "[15, 31]"
+      },
+      "best_params": {
+        "max_iter": "200",
+        "max_leaf_nodes": "31"
+      },
+      "cv_f1_macro": 0.9154102898409083,
+      "accuracy": 0.90875,
+      "f1_macro": 0.9081270970289107,
+      "f1_weighted": 0.9096330163226773,
+      "confusion_matrix": [
+        [
+          291,
+          25,
+          0
+        ],
+        [
+          21,
+          216,
+          7
+        ],
+        [
+          0,
+          20,
+          220
+        ]
+      ],
+      "classification_report": {
+        "LOW": {
+          "precision": 0.9326923076923077,
+          "recall": 0.9208860759493671,
+          "f1-score": 0.9267515923566879,
+          "support": 316.0
+        },
+        "MEDIUM": {
+          "precision": 0.8275862068965517,
+          "recall": 0.8852459016393442,
+          "f1-score": 0.8554455445544554,
+          "support": 244.0
+        },
+        "HIGH": {
+          "precision": 0.9691629955947136,
+          "recall": 0.9166666666666666,
+          "f1-score": 0.9421841541755889,
+          "support": 240.0
+        },
+        "accuracy": 0.90875,
+        "macro avg": {
+          "precision": 0.9098138367278578,
+          "recall": 0.907599548085126,
+          "f1-score": 0.9081270970289107,
+          "support": 800.0
+        },
+        "weighted avg": {
+          "precision": 0.9115761533203239,
+          "recall": 0.90875,
+          "f1-score": 0.9096330163226773,
+          "support": 800.0
+        }
+      },
+      "importance_source": "permutation",
+      "feature_importance": {
+        "currentStock": -0.0009523641040365183,
+        "averageMonthlySales": -0.003523863867479404,
+        "recentSales": -0.0043153922782769305,
+        "daysUntilExpiry": -0.00029065089628947937,
+        "salesRate": -0.0008450340761418263,
+        "expectedConsumption": -0.0029583079063655094,
+        "stockToExpectedRatio": 0.5736615964502793,
+        "remainingMonths": 0.0
+      }
+    },
+    "Logistic Regression": {
+      "parameter_grid": {
+        "estimator__C": "[0.1, 1, 10]"
+      },
+      "best_params": {
+        "estimator__C": "10"
+      },
+      "cv_f1_macro": 0.9089718909087742,
+      "accuracy": 0.89625,
+      "f1_macro": 0.8943004708174365,
+      "f1_weighted": 0.8960856197743324,
+      "confusion_matrix": [
+        [
+          291,
+          25,
+          0
+        ],
+        [
+          28,
+          201,
+          15
+        ],
+        [
+          0,
+          15,
+          225
+        ]
+      ],
+      "classification_report": {
+        "LOW": {
+          "precision": 0.9122257053291536,
+          "recall": 0.9208860759493671,
+          "f1-score": 0.9165354330708662,
+          "support": 316.0
+        },
+        "MEDIUM": {
+          "precision": 0.8340248962655602,
+          "recall": 0.8237704918032787,
+          "f1-score": 0.8288659793814434,
+          "support": 244.0
+        },
+        "HIGH": {
+          "precision": 0.9375,
+          "recall": 0.9375,
+          "f1-score": 0.9375,
+          "support": 240.0
+        },
+        "accuracy": 0.89625,
+        "macro avg": {
+          "precision": 0.8945835338649046,
+          "recall": 0.8940521892508819,
+          "f1-score": 0.8943004708174365,
+          "support": 800.0
+        },
+        "weighted avg": {
+          "precision": 0.8959567469660115,
+          "recall": 0.89625,
+          "f1-score": 0.8960856197743324,
+          "support": 800.0
+        }
+      },
+      "importance_source": "permutation",
+      "feature_importance": {
+        "currentStock": 0.019502435734265734,
+        "averageMonthlySales": -0.0014833482274845711,
+        "recentSales": -0.0020351175645768826,
+        "daysUntilExpiry": -0.0010277461590185277,
+        "salesRate": 0.0005825017118362919,
+        "expectedConsumption": 0.01540417855069669,
+        "stockToExpectedRatio": 0.5478096818077753,
+        "remainingMonths": -0.0010277461590185277
       }
     }
   },
   "chosen_model": {
     "name": "Random Forest",
-    "accuracy": 0.91375,
-    "f1_macro": 0.914056978416555,
-    "selection_rule": "highest test F1 macro, then highest accuracy",
-    "model_feature_order": [
-      "currentStock",
-      "averageMonthlySales",
-      "recentSales",
-      "daysUntilExpiry",
-      "salesRate",
-      "expectedConsumption",
-      "stockToExpectedRatio",
-      "remainingMonths"
-    ]
-  },
-  "feature_importance": {
-    "currentStock": 0.12416420734353964,
-    "averageMonthlySales": 0.011040146323932878,
-    "recentSales": 0.012235154432386939,
-    "daysUntilExpiry": 0.030367772942614946,
-    "salesRate": 0.02020495374808985,
-    "expectedConsumption": 0.0634993594004008,
-    "stockToExpectedRatio": 0.7082821418617621,
-    "remainingMonths": 0.030206263947272737
+    "accuracy": 0.92125,
+    "f1_macro": 0.9217922669328239,
+    "selection_rule": "highest test F1 macro, then highest accuracy, then highest CV F1 macro",
+    "best_params": {
+      "max_depth": "12",
+      "min_samples_leaf": "3"
+    }
   }
 }

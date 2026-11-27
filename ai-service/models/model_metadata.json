@@ -27,6 +27,13 @@
     "2": "HIGH"
   },
   "random_state": 42,
-  "accuracy": 0.91375,
-  "f1_macro": 0.914056978416555
+  "test_size": 0.2,
+  "cv_folds": 3,
+  "best_params": {
+    "max_depth": "12",
+    "min_samples_leaf": "3"
+  },
+  "accuracy": 0.92125,
+  "f1_macro": 0.9217922669328239,
+  "cv_f1_macro": 0.9269801835521078
 }

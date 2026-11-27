@@ -1,0 +1,7 @@
+model,best_params,cv_f1_macro,accuracy,f1_macro,f1_weighted,importance_source
+Decision Tree,"max_depth=8, min_samples_leaf=2",0.9198526599884809,0.9125,0.9127493608653494,0.9141013079694844,native
+Random Forest,"max_depth=12, min_samples_leaf=3",0.9269801835521078,0.92125,0.9217922669328239,0.922918256741206,native
+Extra Trees,"max_depth=12, min_samples_leaf=1",0.9014253568088173,0.90375,0.9025331141635382,0.9037006302005366,native
+Gradient Boosting,"learning_rate=0.1, max_depth=3, n_estimators=100",0.9231770935199899,0.9075,0.9079074735035088,0.9089784775938995,native
+Hist Gradient Boosting,"max_iter=200, max_leaf_nodes=31",0.9154102898409083,0.90875,0.9081270970289107,0.9096330163226773,permutation
+Logistic Regression,estimator__C=10,0.9089718909087742,0.89625,0.8943004708174365,0.8960856197743324,permutation
