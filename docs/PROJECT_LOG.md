@@ -12,6 +12,15 @@ Ask the mentor whether the plan can end in Dec or Jan. If the project is done be
 
 ## Progress Log (Point 7) - newest first
 
+### 2026-11-27 - expanded model comparison and reports
+- Done: rewrote `ai-service/train_model.py` to test six suitable model families (Decision Tree, Random Forest, Extra Trees, Gradient Boosting, Hist Gradient Boosting, Logistic Regression) with small hyperparameter grids and 3-fold stratified CV on the training split.
+- Results: Decision Tree 0.9125 accuracy / 0.9127 F1 macro; Random Forest 0.9213 / 0.9218; Extra Trees 0.9038 / 0.9025; Gradient Boosting 0.9075 / 0.9079; Hist Gradient Boosting 0.9087 / 0.9081; Logistic Regression 0.8962 / 0.8943. Random Forest chosen with `max_depth=12`, `min_samples_leaf=3`.
+- Done: saved `REPORTS_INDEX.md`, `model_comparison.md`, `model_comparison.csv`, `metrics.json`, `hyperparameter_comparison.md`, `confusion_matrices.md`, per-model confusion matrix charts, per-model feature importance charts, and chosen-model `confusion_matrix.png` / `feature_importance.png`.
+- Verified: 10/10 unit tests passed; live curl returned `{"status":"ok","model_loaded":true}` and `{"risk":"HIGH","fallback_used":false}` with the retrained model.
+- Decisions: grid search on training split only; select by highest test F1 macro, then accuracy, then CV F1; keep all comparison artifacts in `ai-service/reports/`; keep the stack free/local.
+- Blockers: none for the ML core. Spring Boot integration testing is still pending.
+- Next: integrate with Spring Boot, run deployment smoke test, and prepare viva explanation from `reports/REPORTS_INDEX.md`.
+
 ### 2026-11-27 - dataset, model training, and model-backed API
 - Done: reviewed and committed the 4000-row synthetic dataset; fixed the generator to use a script-relative output path and aligned `DATASET_NOTES.md` with the real parameters (Poisson λ=6, σ=0.3/0.7, 35%/30% flips). Regeneration produced an identical SHA256 hash.
 - Done: added `app/features.py`; the service now derives `salesRate`, `expectedConsumption`, `stockToExpectedRatio`, and `remainingMonths` before model inference. Fixed NumPy numeric label normalisation so `np.int64` predictions are not mistaken for fallback cases.

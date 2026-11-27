@@ -63,14 +63,18 @@ The same rule is implemented as the fallback in `app/model.py`. The synthetic da
 ## Model
 Chosen: **Random Forest**, saved at `ai-service/models/risk_model.pkl`. Metadata is at `ai-service/models/model_metadata.json`.
 
-Training script: `ai-service/train_model.py` uses an 80/20 stratified split with seed 42.
+Training script: `ai-service/train_model.py` uses an 80/20 stratified split with seed 42 and 3-fold stratified grid search scored by macro F1.
 
-| Model | Accuracy | F1 macro | F1 weighted |
-|---|---:|---:|---:|
-| Decision Tree | 0.9050 | 0.9053 | 0.9064 |
-| Random Forest | 0.9137 | 0.9141 | 0.9154 |
+| Model | CV F1 macro | Accuracy | F1 macro | F1 weighted |
+|---|---:|---:|---:|---:|
+| Decision Tree | 0.9199 | 0.9125 | 0.9127 | 0.9141 |
+| Random Forest | 0.9270 | 0.9213 | 0.9218 | 0.9229 |
+| Extra Trees | 0.9014 | 0.9038 | 0.9025 | 0.9037 |
+| Gradient Boosting | 0.9232 | 0.9075 | 0.9079 | 0.9090 |
+| Hist Gradient Boosting | 0.9154 | 0.9087 | 0.9081 | 0.9096 |
+| Logistic Regression | 0.9090 | 0.8962 | 0.8943 | 0.8961 |
 
-Reason: Random Forest had the higher held-out F1 macro and accuracy. Accuracy is below the 93.27% rule agreement because the labels contain boundary noise; this is expected and avoids a suspicious 99% result.
+Best parameters: `max_depth=12`, `min_samples_leaf=3`. Reason: Random Forest had the highest held-out F1 macro and accuracy, and the highest CV F1. Accuracy is below the 93.27% rule agreement because the labels contain boundary noise; this is expected and avoids a suspicious 99% result.
 
 Raw API feature order:
 
@@ -86,7 +90,7 @@ Model feature order, built by `app/features.py`:
 
 Numeric labels are encoded as `0=LOW`, `1=MEDIUM`, `2=HIGH`; the loader accepts Python and NumPy numerics plus string labels.
 
-Report artifacts: `ai-service/reports/model_comparison.md`, `metrics.json`, `confusion_matrix.png`, `feature_importance.png`. `.gitignore` now permits `ai-service/models/*.pkl` so deployment includes the model.
+Report artifacts live in `ai-service/reports/`: `REPORTS_INDEX.md`, `model_comparison.md`, `metrics.json`, `model_comparison.csv`, `hyperparameter_comparison.md`, `confusion_matrices.md`, per-model confusion matrices, and per-model feature importance charts. `.gitignore` permits `ai-service/models/*.pkl` so deployment includes the model.
 
 ## Folder structure
 Implemented under `ai-service/`:
@@ -103,8 +107,14 @@ ai-service/
   models/risk_model.pkl
   models/model_metadata.json
   notebooks/
+  reports/REPORTS_INDEX.md
   reports/model_comparison.md
+  reports/model_comparison.csv
   reports/metrics.json
+  reports/hyperparameter_comparison.md
+  reports/confusion_matrices.md
+  reports/confusion_matrix_<model>.png
+  reports/feature_importance_<model>.png
   reports/confusion_matrix.png
   reports/feature_importance.png
   tests/test_service.py
@@ -135,9 +145,9 @@ Done:
 - Labelling and fallback rule implemented
 - `/health` and `/predict` endpoints implemented
 - Synthetic 4000-row dataset generated, documented, and verified reproducible
-- Decision Tree vs Random Forest comparison completed
+- Six-model comparison with hyperparameter grids completed
 - Random Forest saved at `models/risk_model.pkl` with metadata
-- Metrics, confusion matrix, feature importance chart, and comparison report generated
+- Full metrics, per-model confusion matrices, per-model feature importance charts, and comparison reports generated
 - 10 unit tests passing
 - Live curl smoke test passed with `model_loaded: true` and `fallback_used: false`
 - Context and progress log created under `docs/`
