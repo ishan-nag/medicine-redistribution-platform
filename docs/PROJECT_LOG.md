@@ -12,6 +12,15 @@ Ask the mentor whether the plan can end in Dec or Jan. If the project is done be
 
 ## Progress Log (Point 7) - newest first
 
+### 2026-11-27 - fallback-first FastAPI service
+- Done: added `ai-service/app/main.py`, `app/model.py`, `app/schemas.py`, requirements files, `Procfile`, storage folders, and `tests/test_service.py`.
+- Done: `/predict` accepts the backend camelCase JSON, accepts snake-case as a fallback, validates non-negative numbers, and returns `risk` plus `fallback_used`. `/health` reports `model_loaded`.
+- Done: rule fallback implements the 0.7/0.3 blended sales rate, 2x HIGH threshold, 1x MEDIUM threshold; model loader tries `models/risk_model.pkl` and falls back if the file is missing, broken, or produces an unknown label.
+- Verified: 8/8 stdlib unit tests passed; live curl smoke test returned `{"status":"ok","model_loaded":false}` and `{"risk":"HIGH","fallback_used":true}`.
+- Decisions: training feature order fixed as `[currentStock, averageMonthlySales, recentSales, daysUntilExpiry]`; numeric label map fixed as `0=LOW`, `1=MEDIUM`, `2=HIGH`; no paid services or required test framework.
+- Blockers: synthetic dataset is still unavailable, so no training, comparison, metrics, or charts yet. `.gitignore` still ignores `*.pkl`.
+- Next: review dataset, add generator, compare Decision Tree vs Random Forest, save the better model, then test with Spring Boot.
+
 ### 2026-11-27 - ML context setup
 - Done: `docs/ML_CONTEXT.md` updated with API contract, labelling/fallback rule, planned `ai-service/` structure, run command, free/deployment notes, and current status.
 - Done: `docs/PROJECT_LOG.md` expanded with the monthly plan and this dated progress entry; older entries kept.
